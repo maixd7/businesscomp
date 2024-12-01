@@ -11,7 +11,7 @@
     <p>
         In this assignment we were provided with historical data from 1987 to 2014 from the U.S. Small Business Administration 
         (SBA) with 899,164 observations. Each observation represents a loan that was guaranteed to some degree
-        by the SBA and showed wheater each loan was paid in full or defaulted.
+        by the SBA and showed wheater each loan was paid in full or defaulted. This document is a summary of our research, code and explanation can be found in the jupyter and R markdown files
     </p>
     <h2>Introduction</h2>
     <p>
@@ -145,17 +145,18 @@
     </p>
     <p>
         Using a train test split of 80/20 We went through a broad range of models and compared them to each other so that we could develop the most accurate model. 
-        Below is the ROC curve of each model that we went through.
+        Below is the ROC curve of each model that we went through. Additional graphs like lift and gain charts can be found in the jupyter notebook.
     </p>
     <div class="iframe-container"> <img src="graphs/models.png" width="40%" height="600" frameborder="0"></iframe></div>
     <p>
         CatBoost would end up being our most accurate model with the highest cost matrix. After optimizing hyperparameters for f1-scoring (priotizing f1-scoring because it would account for our inbalanced dataset) we would end up with
-        an accuracy of 93%.
+        an accuracy of 93%. We also calculated that the most profitable threshold value for the model would be 0.32. Below is a graph of the threshold value on the ROC curve of the CatBoost model.
+        <div class="iframe-container"> <img src="graphs/threshold.png" width="40%" height="600" frameborder="0"></iframe></div>
     </p>
     <p>
         Using SHAP we looked at what variables were the most impactful on the models decision. Below is a graph of all the SHAP values from our test data.
     </p>
     <div class="iframe-container"> <img src="graphs/shap.png" width="40%" height="600" frameborder="0"></iframe></div>
-    <p>We created a form were you could predict </p>
+    <p>We created a form to test out the model on https://businesscomp.streamlit.app/ </p>
 </body>
 </html>

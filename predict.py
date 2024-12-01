@@ -137,9 +137,7 @@ st.button('Predict', on_click=predict)
 if st.session_state.result:
     st.write(st.session_state.result)
 
-# Risk Meter
-if st.session_state.probability is not None:
-    # Create the gauge chart
+    # Create the risk meter
     fig = go.Figure(go.Indicator(
         mode="gauge+number",
         value=st.session_state.probability,
@@ -148,10 +146,10 @@ if st.session_state.probability is not None:
         title={'text': "Risk Meter (Probability of default)"},
         gauge={
             'axis': {'range': [0, 100]},
-            'bar': {'color': "yellow"},
+            'bar': {'color': "rgba(255, 255, 0, 0.6)"},
             'steps': [
-                {'range': [0, 32], 'color': "green"},
-                {'range': [32, 100], 'color': "red"},
+                {'range': [0, 32], 'color': "rgba(0, 128, 0, 0.6)"},
+                {'range': [32, 100], 'color': "rgba(255, 0, 0, 0.6)"},
             ],
             'threshold': {
                 'line': {'color': "black", 'width': 4},
@@ -163,9 +161,6 @@ if st.session_state.probability is not None:
     
     # Render the chart in Streamlit
     st.plotly_chart(fig)
-    
-# SHAP Values & Feature Impact Scorecard
-if st.session_state.X is not None:
     explainer = shap.Explainer(model)
     shap_values = explainer(st.session_state.X)
 
@@ -179,10 +174,9 @@ if st.session_state.X is not None:
     # Sort features based on their mean absolute SHAP impact (top 3)
     feature_importance = feature_importance.sort_values(by='Mean Impact', ascending=False).head(3)
     feature_sum = np.sum(np.abs(shap_values.values[0]))
-    print(feature_importance)
     st.subheader("Top 3 Most Impactful Features")
 
-    cols = st.columns(len(feature_importance)+2)
+    cols = st.columns(len(feature_importance)+100)
     # Display each feature with thumbs up/thumbs down based on its impact
     for i, row in feature_importance.iterrows():
         feature = row['Feature']
@@ -192,23 +186,19 @@ if st.session_state.X is not None:
         impact_icon = "👍" if impact < 0 else "👎"
         # Color code: green for positive, red for negative
         color = "green" if impact < 0 else "red"
-        # Use columns to display metrics in a row
-        with cols[i]:
-            st.markdown(
-                f"""
-                <div style="text-align: center;">
-                    <strong>{feature}</strong><br>
-                    <span style="color: {color}; font-size: 20px;">
-                        {impact_icon} {percentage_value}%
-                    </span>
-                </div>
-                """,
-                unsafe_allow_html=True
-            )
-
-    # Optionally display SHAP summary plot
-    st.subheader("SHAP Summary Plot")
-    st.pyplot(shap.plots.waterfall(shap_values[0], max_display=20))
+        
+        # Create a row for each feature
+        st.markdown(
+            f"""
+            <div style="text-align: center; margin-bottom: 20px;">
+                <strong>{feature}</strong><br>
+                <span style="color: {color}; font-size: 20px;">
+                    {impact_icon} {percentage_value}%
+                </span>
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
 
     st.subheader("Feature analysis")
     col1, col2 = st.columns(2)
@@ -220,7 +210,7 @@ if st.session_state.X is not None:
         st.markdown(
             f"""
             <div style="text-align: center;">
-                <strong>Selected State: {state_name}</strong><br>
+                <h3>Selected State: {state_name}</h3><br>
                 <p>Businesses in the state of {state_name} have a default rate of {state_default_rate*100:.2f}% compared to the average 26.69% default rate</p>
             </div>
             """,
@@ -230,7 +220,7 @@ if st.session_state.X is not None:
             st.markdown(
                 f"""
                 <div style="text-align: center;">
-                    <strong>Urban Businesses</strong><br>
+                    <h3>Urban Businesses</h3><br>
                     <p>Businesses that are urban have a higher default rate than rural businses by ~6%</p>
                 </div>
                 """,
@@ -240,7 +230,7 @@ if st.session_state.X is not None:
             st.markdown(
                 f"""
                 <div style="text-align: center;">
-                    <strong>Rural Businesses</strong><br>
+                    <h3>Rural Businesses</h3><br>
                     <p>Businesses that are rural have a lower default rate than urban businses by ~6%</p>
                 </div>
                 """,
@@ -250,7 +240,7 @@ if st.session_state.X is not None:
             st.markdown(
                 f"""
                 <div style="text-align: center;">
-                    <strong>Loans backed by real estate</strong><br>
+                    <h3>Loans backed by real estate</h3><br>
                     <p>Loans backed by real estate have a lower default rate than loans not backed by real estate by ~27%</p>
                 </div>
                 """,
@@ -260,7 +250,7 @@ if st.session_state.X is not None:
             st.markdown(
                 f"""
                 <div style="text-align: center;">
-                    <strong>Loans not backed by real estate</strong><br>
+                    <h3>Loans not backed by real estate</h3><br>
                     <p>Loans not backed by real estate have a higher default rate than loans backed by real estate by ~27%</p>
                 </div>
                 """,
@@ -270,7 +260,7 @@ if st.session_state.X is not None:
         st.markdown(
             f"""
             <div style="text-align: center;">
-                <strong>Selected Industry: {industry}</strong><br>
+                <h3>Selected Industry: {industry}</h3><br>
                 <p>Businesses in the {industry} industry have a default rate of {industry_default_rate*100:.2f}% compared to the average 26.69% default rate</p>
             </div>
             """,
@@ -280,7 +270,7 @@ if st.session_state.X is not None:
             st.markdown(
                 f"""
                 <div style="text-align: center;">
-                    <strong>Franchised Businesses</strong><br>
+                    <h3>Franchised Businesses</h3><br>
                     <p>Businesses that are franchised have a lower default rate than Non-Franchised Businesses by ~8%</p>
                 </div>
                 """,
@@ -290,7 +280,7 @@ if st.session_state.X is not None:
             st.markdown(
                 f"""
                 <div style="text-align: center;">
-                    <strong>Non-Franchised Businesses</strong><br>
+                    <h3>Non-Franchised Businesses</h3><br>
                     <p>Businesses that are Non-Franchised have a higher default rate than Franchised Businesses businses by ~8%</p>
                 </div>
                 """,
@@ -300,7 +290,7 @@ if st.session_state.X is not None:
             st.markdown(
                 f"""
                 <div style="text-align: center;">
-                    <strong>Loans in the LowDoc program</strong><br>
+                    <h3>Loans in the LowDoc program</h3><br>
                     <p>Loans in the LowDoc program have a lower default rate than those not in it by ~11%</p>
                 </div>
                 """,
@@ -310,7 +300,7 @@ if st.session_state.X is not None:
             st.markdown(
                 f"""
                 <div style="text-align: center;">
-                    <strong>Loans not in the LowDoc program</strong><br>
+                    <h3>Loans not in the LowDoc program</h3><br>
                     <p>Loans not in the LowDoc program have a lower default rate than those in it by ~11%</p>
                 </div>
                 """,

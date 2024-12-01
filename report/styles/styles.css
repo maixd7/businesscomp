@@ -1,15 +1,15 @@
 body {
-    margin: 1in; /* 1 inch margin on all sides */
+    margin: 1in; 
     padding: 0;
-    font-family: "Times New Roman", Times, serif; /* A standard font used in papers */
-    font-size: 12pt; /* Common academic font size */
-    line-height: 1.5; /* Adjust spacing for readability */
-    background-color: white; /* Paper-like background */
-    color: black; /* Standard text color */
+    font-family: "Times New Roman", Times, serif; 
+    font-size: 12pt; 
+    line-height: 1.5; 
+    background-color: white; 
+    color: black; 
 }
 
 .iframe-container {
     display: flex;
-    justify-content: center; /* Centers the iframe horizontally */
-    margin: 20px 0; /* Adds some space above and below the iframe */
+    justify-content: center; 
+    margin: 20px 0; 
 }
