@@ -3,4 +3,4 @@ catboost
 numpy
 joblib
 shap
-plotly.graph_objects
+plotly
