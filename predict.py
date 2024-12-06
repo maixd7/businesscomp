@@ -216,7 +216,7 @@ if st.session_state.result:
             """,
             unsafe_allow_html=True
         )
-        if urbanRural == 1:
+        if urbanRural == "Urban":
             st.markdown(
                 f"""
                 <div style="text-align: center;">
