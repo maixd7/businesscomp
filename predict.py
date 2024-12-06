@@ -125,7 +125,7 @@ def predict():
     X['LowDoc'] = X['LowDoc'].map({'Yes': 1, 'No': 0})
     prediction = model.predict(X)
     probability = model.predict_proba(X)[0][1]
-    if prediction[0] == 0: 
+    if probability < 0.32: 
         st.session_state.result = 'Approve :thumbsup:'
     else: 
         st.session_state.result = 'Reject :thumbsdown:' 
